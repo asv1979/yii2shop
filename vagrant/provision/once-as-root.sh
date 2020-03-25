@@ -20,6 +20,10 @@ debconf-set-selections <<< "mysql-community-server mysql-community-server/root-p
 debconf-set-selections <<< "mysql-community-server mysql-community-server/re-root-pass password \"''\""
 echo "Done!"
 
+info "Add php 7.0 repository"
+add-apt-repository ppa:ondrej/php -y
+
+
 info "Update OS software"
 apt-get update
 apt-get upgrade -y
@@ -57,8 +61,8 @@ ln -s /app/vagrant/nginx/app.conf /etc/nginx/sites-enabled/app.conf
 echo "Done!"
 
 info "Initailize databases for MySQL"
-mysql -uroot <<< "CREATE DATABASE yii2advanced"
-mysql -uroot <<< "CREATE DATABASE yii2advanced_test"
+mysql -uroot <<< "CREATE DATABASE shop"
+mysql -uroot <<< "CREATE DATABASE shop_test"
 echo "Done!"
 
 info "Install composer"
