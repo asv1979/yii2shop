@@ -20,8 +20,6 @@ Thumbs.db
 # composer vendor dir
 /vendor
 
-/environments
-.environments
 
 /vagrant
 .vagrant
