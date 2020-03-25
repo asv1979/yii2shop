@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6e19d59ea73dc754844d01caffac8322",
+    "content-hash": "ba6064427267cd639c75daecc0474b14",
     "packages": [
         {
             "name": "bower-asset/bootstrap",
@@ -631,12 +631,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/yii2-framework.git",
-                "reference": "02b4e38db4a37a5bc95ec604d41dbf5edbb6bef4"
+                "reference": "b8f87ff6c0105667fcff6fb1e4b7e9f12e1fda87"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/yii2-framework/zipball/02b4e38db4a37a5bc95ec604d41dbf5edbb6bef4",
-                "reference": "02b4e38db4a37a5bc95ec604d41dbf5edbb6bef4",
+                "url": "https://api.github.com/repos/yiisoft/yii2-framework/zipball/b8f87ff6c0105667fcff6fb1e4b7e9f12e1fda87",
+                "reference": "b8f87ff6c0105667fcff6fb1e4b7e9f12e1fda87",
                 "shasum": ""
             },
             "require": {
@@ -723,7 +723,7 @@
                 "framework",
                 "yii2"
             ],
-            "time": "2020-03-20T16:15:16+00:00"
+            "time": "2020-03-24T13:51:38+00:00"
         },
         {
             "name": "yiisoft/yii2-bootstrap",
@@ -963,12 +963,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Codeception/Codeception.git",
-                "reference": "2852c4aa4f4e46292b9cdc652a9567518939b7fa"
+                "reference": "55d8d1d882fa0777e47de17b04c29b3c50fe29e7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Codeception/Codeception/zipball/2852c4aa4f4e46292b9cdc652a9567518939b7fa",
-                "reference": "2852c4aa4f4e46292b9cdc652a9567518939b7fa",
+                "url": "https://api.github.com/repos/Codeception/Codeception/zipball/55d8d1d882fa0777e47de17b04c29b3c50fe29e7",
+                "reference": "55d8d1d882fa0777e47de17b04c29b3c50fe29e7",
                 "shasum": ""
             },
             "require": {
@@ -1040,7 +1040,7 @@
                 "functional testing",
                 "unit testing"
             ],
-            "time": "2020-03-20T17:41:09+00:00"
+            "time": "2020-03-23T17:07:20+00:00"
         },
         {
             "name": "codeception/lib-asserts",
@@ -4405,11 +4405,13 @@
     ],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": [],
+    "stability-flags": {
+        "codeception/codeception": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": ">=5.6.0"
+        "php": ">=7.2"
     },
     "platform-dev": []
 }

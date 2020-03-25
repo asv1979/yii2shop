@@ -20,6 +20,14 @@ Thumbs.db
 # composer vendor dir
 /vendor
 
+/environments
+.environments
+
+/vagrant
+.vagrant
+
+Vagrantfile
+
 # composer itself is not needed
 composer.phar
 
