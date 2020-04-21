@@ -257,6 +257,19 @@ class SiteController extends Controller
         ]);
     }
 
+//    public function actionConfirm($token)
+//    {
+//        try {
+//            $this->service->confirm($token);
+//            Yii::$app->session->setFlash('success', 'Your email is confirmed.');
+//            return $this->redirect(['auth/auth/login']);
+//        } catch (\DomainException $e) {
+//            Yii::$app->errorHandler->logException($e);
+//            Yii::$app->session->setFlash('error', $e->getMessage());
+//        }
+//        return $this->goHome();
+//    }
+
     /**
      * Verify email address
      *

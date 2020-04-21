@@ -2,6 +2,7 @@
 
 namespace common\entities;
 
+use DomainException;
 use Yii;
 use yii\base\NotSupportedException;
 use yii\behaviors\TimestampBehavior;
@@ -27,6 +28,7 @@ class User extends ActiveRecord implements IdentityInterface
 {
 
     const STATUS_DELETED = 0;
+    const STATUS_WAIT = 1;
     const STATUS_INACTIVE = 9;
     const STATUS_ACTIVE = 10;
 
@@ -66,7 +68,7 @@ class User extends ActiveRecord implements IdentityInterface
      * @return static
      * @throws \yii\base\Exception
      */
-    public static function signup(string $username, string $email, string $password): self
+    public static function requestSignup(string $username, string $email, string $password): self
     {
         $user = new static;
         $user->username = $username;
@@ -75,6 +77,8 @@ class User extends ActiveRecord implements IdentityInterface
         $user->setPassword(!empty($password) ? $password : Yii::$app->security->generateRandomString());
         $user->created_at = time();
         $user->status = self::STATUS_ACTIVE;
+//        $user->status = self::STATUS_WAIT;
+//        $user->email_reset_token = Yii::$app->security->generateRandomString() . '_' . time();
         $user->auth_key = Yii::$app->security->generateRandomString();
         return $user;
     }
@@ -241,27 +245,6 @@ class User extends ActiveRecord implements IdentityInterface
     }
 
     /**
-     * @param $email
-     * @return array|ActiveRecord|null
-     */
-    public function getByEmail($email)
-    {
-        return $this->getBy(['email' => $email]);
-    }
-
-    /**
-     * @param array $condition
-     * @return array|ActiveRecord|null
-     */
-    private function getBy(array $condition)
-    {
-        if (!$user = User::find()->andWhere($condition)->limit(1)->one()) {
-            throw new NotFoundException('User not found.');
-        }
-        return $user;
-    }
-
-    /**
      * @throws \yii\base\Exception
      */
     public function requestPasswordReset()
@@ -270,15 +253,6 @@ class User extends ActiveRecord implements IdentityInterface
             throw new \DomainException('Password resetting is already requested.');
         }
         $this->password_reset_token = Yii::$app->security->generateRandomString() . '_' . time();
-    }
-
-    /**
-     * @param $token
-     * @return bool
-     */
-    public static function existsByPasswordResetToken($token)
-    {
-        return (bool)User::findByPasswordResetToken($token);
     }
 
     /**
@@ -292,5 +266,20 @@ class User extends ActiveRecord implements IdentityInterface
         $this->setPassword($password);
         $this->password_reset_token = null;
     }
-    
+
+    public function confirmSignup(): void
+    {
+        if (!$this->isWait()) {
+            throw new \DomainException('User is already active.');
+        }
+        $this->status = self::STATUS_ACTIVE;
+        $this->email_confirm_token = null;
+        //$this->recordEvent(new UserSignUpConfirmed($this));
+    }
+
+    public function isWait(): bool
+    {
+        return $this->status === self::STATUS_WAIT;
+    }
+
 }
