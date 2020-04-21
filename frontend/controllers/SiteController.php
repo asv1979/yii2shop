@@ -5,6 +5,7 @@ namespace frontend\controllers;
 use frontend\forms\ResendVerificationEmailForm;
 use frontend\forms\VerifyEmailForm;
 use shop\useCases\auth\PasswordResetService;
+use shop\useCases\ContactService;
 use Yii;
 use yii\base\InvalidArgumentException;
 use yii\web\BadRequestHttpException;
@@ -23,6 +24,34 @@ use shop\useCases\auth\SignupService;
  */
 class SiteController extends Controller
 {
+    /**
+     * @var PasswordResetService
+     */
+    private $service;
+
+    private $serviceContact;
+
+    /**
+     * SiteController constructor.
+     * @param $id
+     * @param $module
+     * @param PasswordResetService $service
+     * @param ContactService $serviceContact
+     * @param array $config
+     */
+    public function __construct(
+        $id,
+        $module,
+        PasswordResetService $service,
+        ContactService $serviceContact,
+        $config = []
+    )
+    {
+        parent::__construct($id, $module, $config);
+        $this->service = $service;
+        $this->serviceContact = $serviceContact;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -123,19 +152,21 @@ class SiteController extends Controller
      */
     public function actionContact()
     {
-        $model = new ContactForm();
-        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-            if ($model->sendEmail(Yii::$app->params['adminEmail'])) {
+        $form = new ContactForm();
+        if ($form->load(Yii::$app->request->post()) && $form->validate()) {
+            try {
+                $this->serviceContact->send($form);
                 Yii::$app->session->setFlash('success', 'Thank you for contacting us. We will respond to you as soon as possible.');
-            } else {
+                return $this->goHome();
+            } catch (\Exception $e) {
+                Yii::$app->errorHandler->logException($e);
                 Yii::$app->session->setFlash('error', 'There was an error sending your message.');
             }
-
             return $this->refresh();
         }
 
         return $this->render('contact', [
-            'model' => $model,
+            'model' => $form,
         ]);
 
     }
@@ -149,7 +180,6 @@ class SiteController extends Controller
     {
         return $this->render('about');
     }
-
 
     /**
      * @return string|\yii\web\Response
@@ -202,10 +232,8 @@ class SiteController extends Controller
      */
     public function actionResetPassword($token)
     {
-        $service = new PasswordResetService();
-
         try {
-            $service->validateToken($token);
+            $this->service->validateToken($token);
         } catch (\DomainException $e) {
             throw new BadRequestHttpException($e->getMessage());
         }
@@ -213,11 +241,11 @@ class SiteController extends Controller
         $form = new ResetPasswordForm($token);
 
         if ($form->load(Yii::$app->request->post()) && $form->validate()) {
-            try{
-                $service->reset($token,$form);
+            try {
+                $this->service->reset($token, $form);
                 Yii::$app->session->setFlash('success', 'New password saved.');
                 return $this->goHome();
-            }catch(\DomainException $e){
+            } catch (\DomainException $e) {
                 Yii::$app->ErrorHandler->logException($e);
                 Yii::$app->session->setFlash('error', $e->getMessage());
             }

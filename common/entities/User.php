@@ -1,4 +1,5 @@
 <?php
+
 namespace common\entities;
 
 use Yii;
@@ -129,7 +130,8 @@ class User extends ActiveRecord implements IdentityInterface
      * @param string $token verify email token
      * @return static|null
      */
-    public static function findByVerificationToken($token) {
+    public static function findByVerificationToken($token)
+    {
         return static::findOne([
             'verification_token' => $token,
             'status' => self::STATUS_INACTIVE
@@ -148,7 +150,7 @@ class User extends ActiveRecord implements IdentityInterface
             return false;
         }
 
-        $timestamp = (int) substr($token, strrpos($token, '_') + 1);
+        $timestamp = (int)substr($token, strrpos($token, '_') + 1);
         $expire = Yii::$app->params['user.passwordResetTokenExpire'];
         return $timestamp + $expire >= time();
     }
@@ -259,7 +261,10 @@ class User extends ActiveRecord implements IdentityInterface
         return $user;
     }
 
-    public function requestPasswordReset(): void
+    /**
+     * @throws \yii\base\Exception
+     */
+    public function requestPasswordReset()
     {
         if (!empty($this->password_reset_token) && self::isPasswordResetTokenValid($this->password_reset_token)) {
             throw new \DomainException('Password resetting is already requested.');
@@ -267,10 +272,18 @@ class User extends ActiveRecord implements IdentityInterface
         $this->password_reset_token = Yii::$app->security->generateRandomString() . '_' . time();
     }
 
-    public static function existsByPasswordResetToken($token){
-        return (bool) User::findByPasswordResetToken($token);
+    /**
+     * @param $token
+     * @return bool
+     */
+    public static function existsByPasswordResetToken($token)
+    {
+        return (bool)User::findByPasswordResetToken($token);
     }
 
+    /**
+     * @param $password
+     */
     public function resetPassword($password): void
     {
         if (empty($this->password_reset_token)) {
@@ -279,6 +292,5 @@ class User extends ActiveRecord implements IdentityInterface
         $this->setPassword($password);
         $this->password_reset_token = null;
     }
-
-
+    
 }

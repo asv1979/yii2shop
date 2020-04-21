@@ -25,7 +25,6 @@ class PasswordResetService
             throw new \RuntimeException('User saving error.');
         }
 
-
         $sent =  Yii::$app
         ->mailer
         ->compose(
