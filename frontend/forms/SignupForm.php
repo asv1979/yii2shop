@@ -1,9 +1,8 @@
 <?php
+
 namespace frontend\forms;
 
-use Yii;
 use yii\base\Model;
-use common\entities\User;
 
 /**
  * Signup form
@@ -13,7 +12,6 @@ class SignupForm extends Model
     public $username;
     public $email;
     public $password;
-
 
     /**
      * {@inheritdoc}
@@ -35,40 +33,6 @@ class SignupForm extends Model
             ['password', 'required'],
             ['password', 'string', 'min' => 6],
         ];
-    }
-
-    /**
-     * @return User|null
-     */
-    public function signup()
-    {
-        if (!$this->validate()) {
-            return null;
-        }
-        
-        $user = User::signup($this->username,$this->email,$this->password);
-
-        return $user->save() ? $user : null;
-
-    }
-
-    /**
-     * Sends confirmation email to user
-     * @param User $user user model to with email should be send
-     * @return bool whether the email was sent
-     */
-    protected function sendEmail($user)
-    {
-        return Yii::$app
-            ->mailer
-            ->compose(
-                ['html' => 'emailVerify-html', 'text' => 'emailVerify-text'],
-                ['user' => $user]
-            )
-            ->setFrom([Yii::$app->params['supportEmail'] => Yii::$app->name . ' robot'])
-            ->setTo($this->email)
-            ->setSubject('Account registration at ' . Yii::$app->name)
-            ->send();
     }
 
 }

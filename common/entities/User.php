@@ -237,4 +237,48 @@ class User extends ActiveRecord implements IdentityInterface
     {
         return $this->status === self::STATUS_ACTIVE;
     }
+
+    /**
+     * @param $email
+     * @return array|ActiveRecord|null
+     */
+    public function getByEmail($email)
+    {
+        return $this->getBy(['email' => $email]);
+    }
+
+    /**
+     * @param array $condition
+     * @return array|ActiveRecord|null
+     */
+    private function getBy(array $condition)
+    {
+        if (!$user = User::find()->andWhere($condition)->limit(1)->one()) {
+            throw new NotFoundException('User not found.');
+        }
+        return $user;
+    }
+
+    public function requestPasswordReset(): void
+    {
+        if (!empty($this->password_reset_token) && self::isPasswordResetTokenValid($this->password_reset_token)) {
+            throw new \DomainException('Password resetting is already requested.');
+        }
+        $this->password_reset_token = Yii::$app->security->generateRandomString() . '_' . time();
+    }
+
+    public static function existsByPasswordResetToken($token){
+        return (bool) User::findByPasswordResetToken($token);
+    }
+
+    public function resetPassword($password): void
+    {
+        if (empty($this->password_reset_token)) {
+            throw new \DomainException('Password resetting is not requested.');
+        }
+        $this->setPassword($password);
+        $this->password_reset_token = null;
+    }
+
+
 }
