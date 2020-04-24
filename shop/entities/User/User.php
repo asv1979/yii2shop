@@ -1,6 +1,6 @@
 <?php
 
-namespace common\entities;
+namespace shop\entities\User;
 
 use DomainException;
 use Yii;

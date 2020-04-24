@@ -1,9 +1,10 @@
 <?php
-
 namespace frontend\controllers;
 
 use frontend\forms\ResendVerificationEmailForm;
 use frontend\forms\VerifyEmailForm;
+use shop\forms\auth\LoginForm;
+use shop\useCases\auth\AuthService;
 use shop\useCases\auth\PasswordResetService;
 use shop\useCases\ContactService;
 use Yii;
@@ -12,7 +13,6 @@ use yii\web\BadRequestHttpException;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
-use common\forms\LoginForm;
 use frontend\forms\PasswordResetRequestForm;
 use frontend\forms\ResetPasswordForm;
 use frontend\forms\SignupForm;
@@ -29,27 +29,24 @@ class SiteController extends Controller
      */
     private $service;
 
-    private $serviceContact;
+    private $contactService;
 
-    /**
-     * SiteController constructor.
-     * @param $id
-     * @param $module
-     * @param PasswordResetService $service
-     * @param ContactService $serviceContact
-     * @param array $config
-     */
+    private $authService;
+
+
     public function __construct(
         $id,
         $module,
         PasswordResetService $service,
-        ContactService $serviceContact,
+        ContactService $contactService,
+        AuthService $authService,
         $config = []
     )
     {
         parent::__construct($id, $module, $config);
         $this->service = $service;
-        $this->serviceContact = $serviceContact;
+        $this->contactService = $contactService;
+        $this->authService = $authService;
     }
 
     /**
@@ -107,68 +104,6 @@ class SiteController extends Controller
     public function actionIndex()
     {
         return $this->render('index');
-    }
-
-    /**
-     * Logs in a user.
-     *
-     * @return mixed
-     */
-    public function actionLogin()
-    {
-        if (!Yii::$app->user->isGuest) {
-            return $this->goHome();
-        }
-
-        $model = new LoginForm();
-        if ($model->load(Yii::$app->request->post()) && $model->login()) {
-            return $this->goBack();
-        }
-
-        $model->password = '';
-
-        return $this->render('login', [
-            'model' => $model,
-        ]);
-
-    }
-
-    /**
-     * Logs out the current user.
-     *
-     * @return mixed
-     */
-    public function actionLogout()
-    {
-        Yii::$app->user->logout();
-
-        return $this->goHome();
-    }
-
-    /**
-     * Displays contact page.
-     *
-     * @return mixed
-     */
-    public function actionContact()
-    {
-        $form = new ContactForm();
-        if ($form->load(Yii::$app->request->post()) && $form->validate()) {
-            try {
-                $this->serviceContact->send($form);
-                Yii::$app->session->setFlash('success', 'Thank you for contacting us. We will respond to you as soon as possible.');
-                return $this->goHome();
-            } catch (\Exception $e) {
-                Yii::$app->errorHandler->logException($e);
-                Yii::$app->session->setFlash('error', 'There was an error sending your message.');
-            }
-            return $this->refresh();
-        }
-
-        return $this->render('contact', [
-            'model' => $form,
-        ]);
-
     }
 
     /**

@@ -1,7 +1,7 @@
 <?php
 namespace shop\useCases\auth;
 
-use common\entities\User;
+use shop\entities\User\User;
 use frontend\forms\PasswordResetRequestForm;
 use frontend\forms\ResetPasswordForm;
 use shop\repositories\UserRepository;
@@ -10,17 +10,30 @@ use yii\mail\MailerInterface;
 
 class PasswordResetService
 {
-
-
+    /**
+     * @var MailerInterface
+     */
     private $mailer;
+    /**
+     * @var UserRepository
+     */
     private $users;
 
+    /**
+     * PasswordResetService constructor.
+     * @param UserRepository $users
+     * @param MailerInterface $mailer
+     */
     public function __construct(UserRepository $users, MailerInterface $mailer)
     {
         $this->mailer = $mailer;
         $this->users = $users;
     }
 
+    /**
+     * @param PasswordResetRequestForm $form
+     * @throws \yii\base\Exception
+     */
     public function request(PasswordResetRequestForm $form): void
     {
         $user = $this->users->getByEmail($form->email);
@@ -46,6 +59,9 @@ class PasswordResetService
         }
     }
 
+    /**
+     * @param $token
+     */
     public function validateToken($token): void
     {
         if (empty($token) || !is_string($token)) {
@@ -56,6 +72,10 @@ class PasswordResetService
         }
     }
 
+    /**
+     * @param string $token
+     * @param ResetPasswordForm $form
+     */
     public function reset(string $token, ResetPasswordForm $form): void
     {
         $user = $this->users->getByPasswordResetToken($token);

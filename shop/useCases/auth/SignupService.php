@@ -2,8 +2,8 @@
 
 namespace shop\useCases\auth;
 
-use common\entities\User;
-use frontend\forms\SignupForm;
+use shop\entities\User\User;
+use shop\forms\auth\SignupForm;
 use shop\repositories\UserRepository;
 
 class SignupService
