@@ -94,5 +94,16 @@ class UserRepository
             throw new NotFoundException('User not found.');
         }
         return $user;
+
+    }
+
+    /**
+     * @param $network
+     * @param $identity
+     * @return array|\yii\db\ActiveRecord|null
+     */
+    public function findByNetworkIdentity($network, $identity)
+    {
+        return User::find()->joinWith('networks n')->andWhere(['n.network' => $network, 'n.identity' => $identity])->one();
     }
 }
