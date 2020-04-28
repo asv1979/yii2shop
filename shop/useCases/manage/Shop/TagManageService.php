@@ -8,13 +8,24 @@ use shop\repositories\Shop\TagRepository;
 
 class TagManageService
 {
+    /**
+     * @var TagRepository
+     */
     private $tags;
 
+    /**
+     * TagManageService constructor.
+     * @param TagRepository $tags
+     */
     public function __construct(TagRepository $tags)
     {
         $this->tags = $tags;
     }
 
+    /**
+     * @param TagForm $form
+     * @return Tag
+     */
     public function create(TagForm $form): Tag
     {
         $tag = Tag::create(
@@ -25,6 +36,10 @@ class TagManageService
         return $tag;
     }
 
+    /**
+     * @param $id
+     * @param TagForm $form
+     */
     public function edit($id, TagForm $form): void
     {
         $tag = $this->tags->get($id);
@@ -35,6 +50,11 @@ class TagManageService
         $this->tags->save($tag);
     }
 
+    /**
+     * @param $id
+     * @throws \Throwable
+     * @throws \yii\db\StaleObjectException
+     */
     public function remove($id): void
     {
         $tag = $this->tags->get($id);
