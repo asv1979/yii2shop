@@ -63,9 +63,9 @@ class UserRepository
 
 
     /**
-     * @param User $user
+     * @param $user
      */
-    public function save(User $user): void
+    public function save($user): void
     {
         if (!$user->save()) {
             throw new \RuntimeException('Saving error.');
@@ -73,11 +73,10 @@ class UserRepository
     }
 
     /**
-     * @param User $user
      * @throws \Throwable
      * @throws \yii\db\StaleObjectException
      */
-    public function remove(User $user): void
+    public function remove($user): void
     {
         if (!$user->delete()) {
             throw new \RuntimeException('Removing error.');

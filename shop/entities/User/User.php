@@ -1,8 +1,6 @@
 <?php
-
 namespace shop\entities\User;
 
-use DomainException;
 use lhs\Yii2SaveRelationsBehavior\SaveRelationsBehavior;
 use Yii;
 use yii\base\NotSupportedException;
@@ -56,6 +54,8 @@ class User extends ActiveRecord implements IdentityInterface
         ];
     }
 
+    /**
+     * @return array['label' => 'Users', 'icon' => 'user', 'url' => ['/user/index'], 'active' => $this->context->id == 'user/index'],     */
     public function transactions()
     {
         return [
@@ -64,15 +64,44 @@ class User extends ActiveRecord implements IdentityInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @param string $username
+     * @param string $email
+     * @param string $password
+     * @return static
+     * @throws \yii\base\Exception
      */
-    public function rules()
+    public static function create(string $username, string $email, string $password): self
     {
-        return [
-            ['status', 'default', 'value' => self::STATUS_INACTIVE],
-            ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_INACTIVE, self::STATUS_DELETED]],
-        ];
+        $user = new User();
+        $user->username = $username;
+        $user->email = $email;
+        $user->setPassword(!empty($password) ? $password : Yii::$app->security->generateRandomString());
+        $user->created_at = time();
+        $user->status = self::STATUS_ACTIVE;
+        $user->auth_key = Yii::$app->security->generateRandomString();
+        return $user;
     }
+
+    /**
+     * @param string $username
+     * @param string $email
+     */
+    public function edit(string $username, string $email): void
+    {
+        $this->username = $username;
+        $this->email = $email;
+        $this->updated_at = time();
+    }
+
+    /**
+     * @param string $email
+     */
+    public function editProfile(string $email): void
+    {
+        $this->email = $email;
+        $this->updated_at = time();
+    }
+
 
     /**
      * @param string $username
@@ -86,12 +115,9 @@ class User extends ActiveRecord implements IdentityInterface
         $user = new static;
         $user->username = $username;
         $user->email = $email;
-//        $user->phone = $phone;
         $user->setPassword(!empty($password) ? $password : Yii::$app->security->generateRandomString());
         $user->created_at = time();
         $user->status = self::STATUS_ACTIVE;
-//        $user->status = self::STATUS_WAIT;
-//        $user->email_reset_token = Yii::$app->security->generateRandomString() . '_' . time();
         $user->auth_key = Yii::$app->security->generateRandomString();
         return $user;
     }
@@ -280,6 +306,9 @@ class User extends ActiveRecord implements IdentityInterface
         $this->password_reset_token = null;
     }
 
+    /**
+     *
+     */
     public function confirmSignup(): void
     {
         if (!$this->isWait()) {
