@@ -1,21 +1,36 @@
 <?php
-
-namespace frontend\controllers\auth;
+namespace backend\controllers;
 
 use common\auth\Identity;
-use shop\forms\auth\LoginForm;
 use shop\useCases\auth\AuthService;
 use Yii;
 use yii\web\Controller;
+use yii\filters\VerbFilter;
+use shop\forms\auth\LoginForm;
 
 class AuthController extends Controller
 {
-    private $service;
+    private $authService;
 
     public function __construct($id, $module, AuthService $service, $config = [])
     {
         parent::__construct($id, $module, $config);
-        $this->service = $service;
+        $this->authService = $service;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function behaviors()
+    {
+        return [
+            'verbs' => [
+                'class' => VerbFilter::class,
+                'actions' => [
+                    'logout' => ['post'],
+                ],
+            ],
+        ];
     }
 
     /**
@@ -27,11 +42,13 @@ class AuthController extends Controller
             return $this->goHome();
         }
 
+        $this->layout = 'main-login';
+
         $form = new LoginForm();
         if ($form->load(Yii::$app->request->post()) && $form->validate()) {
             try {
-                $user = $this->service->auth($form);
-                Yii::$app->user->login($user, $form->rememberMe ? 3600*24*30 : 0);
+                $user = $this->authService->auth($form);
+                Yii::$app->user->login($user, $form->rememberMe ? 3600 * 24 * 30 : 0);
                 return $this->goBack();
             } catch (\DomainException $e) {
                 Yii::$app->errorHandler->logException($e);
@@ -52,6 +69,5 @@ class AuthController extends Controller
         Yii::$app->user->logout();
 
         return $this->goHome();
-
     }
 }

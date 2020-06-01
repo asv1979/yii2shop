@@ -82,7 +82,7 @@
         ],
         "docker:migrate": [
             "docker-compose exec -T app console/yii app/setup --interactive=0 --drop"
-        ],
+        ]
 
     }
 }
