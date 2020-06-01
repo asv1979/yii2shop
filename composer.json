@@ -47,5 +47,42 @@
             "type": "composer",
             "url": "https://asset-packagist.org"
         }
-    ]
+    ],
+    "scripts": {
+        "build:env": [
+            "cp .env.dist .env"
+        ],
+        "build:app": [
+            "@composer install",
+            "echo 'waiting for mysql' && sleep 10",
+            "console/yii app/setup --interactive=0"
+        ],
+        "docker:build": [
+            "@docker:start",
+            "docker-compose exec -T app composer run-script build:app",
+            "echo \"All ok!\""
+        ],
+        "docker:re-build": [
+            "@build:env",
+            "@docker:re-start",
+            "docker-compose exec -T app composer run-script build:app",
+            "echo \"All ok!\""
+        ],
+        "docker:start": [
+            "docker-compose up --force-recreate -d"
+        ],
+        "docker:re-start": [
+            "docker-compose up --force-recreate -d --build"
+        ],
+        "docker:cleanup": [
+            "docker-compose rm -fsv"
+        ],
+        "docker:system-prune": [
+            "docker system prune --volumes -f"
+        ],
+        "docker:migrate": [
+            "docker-compose exec -T app console/yii app/setup --interactive=0 --drop"
+        ],
+
+    }
 }
