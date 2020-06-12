@@ -22,6 +22,10 @@ class TagForm extends Model
 
     /**
      * TagForm constructor.
+     *
+     * not to create two forms, one to create? another for edit? here we use construct
+     * using optional $tag, then create it is empty, edit- send an exist tag object
+     *
      * @param Tag|null $tag
      * @param array $config
      */

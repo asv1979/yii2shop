@@ -8,17 +8,36 @@ use shop\forms\manage\Shop\BrandForm;
 use shop\repositories\Shop\BrandRepository;
 use shop\repositories\Shop\ProductRepository;
 
+/**
+ * Class BrandManageService
+ * @package shop\useCases\manage\Shop
+ */
 class BrandManageService
 {
+    /**
+     * @var BrandRepository
+     */
     private $brands;
+    /**
+     * @var ProductRepository
+     */
     private $products;
 
+    /**
+     * BrandManageService constructor.
+     * @param BrandRepository $brands
+     * @param ProductRepository $products
+     */
     public function __construct(BrandRepository $brands, ProductRepository $products)
     {
         $this->brands = $brands;
         $this->products = $products;
     }
 
+    /**
+     * @param BrandForm $form
+     * @return Brand
+     */
     public function create(BrandForm $form): Brand
     {
         $brand = Brand::create(
@@ -34,6 +53,10 @@ class BrandManageService
         return $brand;
     }
 
+    /**
+     * @param $id
+     * @param BrandForm $form
+     */
     public function edit($id, BrandForm $form): void
     {
         $brand = $this->brands->get($id);
@@ -49,6 +72,9 @@ class BrandManageService
         $this->brands->save($brand);
     }
 
+    /**
+     * @param $id
+     */
     public function remove($id): void
     {
         $brand = $this->brands->get($id);

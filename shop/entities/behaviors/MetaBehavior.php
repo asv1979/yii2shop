@@ -1,4 +1,5 @@
 <?php
+
 namespace shop\entities\behaviors;
 
 use shop\entities\Meta;
@@ -15,10 +16,16 @@ use yii\helpers\Json;
 class MetaBehavior extends Behavior
 {
     /**
+     * the value can be change for future extensibility
+     * then in a entity's behavior method return such an example
+     * [ 'class' => MetaBehavior::class, 'attribute' => 'new_value']
+     *
      * @var string
      */
     public $attribute = 'meta';
     /**
+     * the value can be change for future extensibility
+     *
      * @var string
      */
     public $jsonAttribute = 'meta_json';
@@ -42,10 +49,11 @@ class MetaBehavior extends Behavior
     {
         $model = $event->sender;
         $meta = Json::decode($model->getAttribute($this->jsonAttribute));
+        // without hardcode $model->attribute we use the such construction -   $model->{$this->attribute}
         $model->{$this->attribute} = new Meta(
-            ArrayHelper::getValue($meta, 'title'),
-            ArrayHelper::getValue($meta, 'description'),
-            ArrayHelper::getValue($meta, 'keywords')
+            $meta['title'] ?? null,
+            $meta['description'] ?? null,
+            $meta['keywords'] ?? null
         );
     }
 
