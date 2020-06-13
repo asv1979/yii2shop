@@ -8,15 +8,30 @@ use shop\repositories\events\EntityPersisted;
 use shop\repositories\events\EntityRemoved;
 use shop\repositories\NotFoundException;
 
+/**
+ * Class CategoryRepository
+ * @package shop\repositories\Shop
+ */
 class CategoryRepository
 {
+    /**
+     * @var EventDispatcher
+     */
     private $dispatcher;
 
+    /**
+     * CategoryRepository constructor.
+     * @param EventDispatcher $dispatcher
+     */
     public function __construct(EventDispatcher $dispatcher)
     {
         $this->dispatcher = $dispatcher;
     }
 
+    /**
+     * @param $id
+     * @return Category
+     */
     public function get($id): Category
     {
         if (!$category = Category::findOne($id)) {
@@ -25,6 +40,9 @@ class CategoryRepository
         return $category;
     }
 
+    /**
+     * @param Category $category
+     */
     public function save(Category $category): void
     {
         if (!$category->save()) {
@@ -33,6 +51,11 @@ class CategoryRepository
         $this->dispatcher->dispatch(new EntityPersisted($category));
     }
 
+    /**
+     * @param Category $category
+     * @throws \Throwable
+     * @throws \yii\db\StaleObjectException
+     */
     public function remove(Category $category): void
     {
         if (!$category->delete()) {

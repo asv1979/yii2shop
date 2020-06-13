@@ -8,17 +8,36 @@ use shop\forms\manage\Shop\CategoryForm;
 use shop\repositories\Shop\CategoryRepository;
 use shop\repositories\Shop\ProductRepository;
 
+/**
+ * Class CategoryManageService
+ * @package shop\useCases\manage\Shop
+ */
 class CategoryManageService
 {
+    /**
+     * @var CategoryRepository
+     */
     private $categories;
+    /**
+     * @var ProductRepository
+     */
     private $products;
 
+    /**
+     * CategoryManageService constructor.
+     * @param CategoryRepository $categories
+     * @param ProductRepository $products
+     */
     public function __construct(CategoryRepository $categories, ProductRepository $products)
     {
         $this->categories = $categories;
         $this->products = $products;
     }
 
+    /**
+     * @param CategoryForm $form
+     * @return Category
+     */
     public function create(CategoryForm $form): Category
     {
         $parent = $this->categories->get($form->parentId);
@@ -38,6 +57,10 @@ class CategoryManageService
         return $category;
     }
 
+    /**
+     * @param $id
+     * @param CategoryForm $form
+     */
     public function edit($id, CategoryForm $form): void
     {
         $category = $this->categories->get($id);
@@ -60,6 +83,9 @@ class CategoryManageService
         $this->categories->save($category);
     }
 
+    /**
+     * @param $id
+     */
     public function moveUp($id): void
     {
         $category = $this->categories->get($id);
@@ -70,6 +96,9 @@ class CategoryManageService
         $this->categories->save($category);
     }
 
+    /**
+     * @param $id
+     */
     public function moveDown($id): void
     {
         $category = $this->categories->get($id);
@@ -80,6 +109,9 @@ class CategoryManageService
         $this->categories->save($category);
     }
 
+    /**
+     * @param $id
+     */
     public function remove($id): void
     {
         $category = $this->categories->get($id);
@@ -90,6 +122,9 @@ class CategoryManageService
         $this->categories->remove($category);
     }
 
+    /**
+     * @param Category $category
+     */
     private function assertIsNotRoot(Category $category): void
     {
         if ($category->isRoot()) {

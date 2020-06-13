@@ -13,14 +13,37 @@ use yii\helpers\ArrayHelper;
  */
 class CategoryForm extends CompositeForm
 {
+    /**
+     * @var string
+     */
     public $name;
+    /**
+     * @var string
+     */
     public $slug;
+    /**
+     * @var string
+     */
     public $title;
+    /**
+     * @var string
+     */
     public $description;
+    /**
+     * @var int|null
+     */
     public $parentId;
 
+    /**
+     * @var Category
+     */
     private $_category;
 
+    /**
+     * CategoryForm constructor.
+     * @param Category|null $category
+     * @param array $config
+     */
     public function __construct(Category $category = null, $config = [])
     {
         if ($category) {
@@ -37,6 +60,9 @@ class CategoryForm extends CompositeForm
         parent::__construct($config);
     }
 
+    /**
+     * @return array
+     */
     public function rules(): array
     {
         return [
@@ -49,6 +75,9 @@ class CategoryForm extends CompositeForm
         ];
     }
 
+    /**
+     * @return array
+     */
     public function parentCategoriesList(): array
     {
         return ArrayHelper::map(Category::find()->orderBy('lft')->asArray()->all(), 'id', function (array $category) {
@@ -56,6 +85,9 @@ class CategoryForm extends CompositeForm
         });
     }
 
+    /**
+     * @return string[]
+     */
     public function internalForms(): array
     {
         return ['meta'];
