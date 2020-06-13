@@ -1,20 +1,34 @@
 <?php
-
 namespace shop\useCases\manage\Shop;
 
 use shop\entities\Shop\Characteristic;
 use shop\forms\manage\Shop\CharacteristicForm;
 use shop\repositories\Shop\CharacteristicRepository;
 
+/**
+ * Class CharacteristicManageService
+ * @package shop\useCases\manage\Shop
+ */
 class CharacteristicManageService
 {
+    /**
+     * @var CharacteristicRepository
+     */
     private $characteristics;
 
+    /**
+     * CharacteristicManageService constructor.
+     * @param CharacteristicRepository $characteristics
+     */
     public function __construct(CharacteristicRepository $characteristics)
     {
         $this->characteristics = $characteristics;
     }
 
+    /**
+     * @param CharacteristicForm $form
+     * @return Characteristic
+     */
     public function create(CharacteristicForm $form): Characteristic
     {
         $characteristic = Characteristic::create(
@@ -29,6 +43,10 @@ class CharacteristicManageService
         return $characteristic;
     }
 
+    /**
+     * @param $id
+     * @param CharacteristicForm $form
+     */
     public function edit($id, CharacteristicForm $form): void
     {
         $characteristic = $this->characteristics->get($id);
@@ -43,6 +61,9 @@ class CharacteristicManageService
         $this->characteristics->save($characteristic);
     }
 
+    /**
+     * @param $id
+     */
     public function remove($id): void
     {
         $characteristic = $this->characteristics->get($id);

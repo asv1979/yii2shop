@@ -1,5 +1,4 @@
 <?php
-
 namespace shop\forms\manage\Shop;
 
 use shop\entities\Shop\Characteristic;
@@ -11,18 +10,46 @@ use yii\base\Model;
  */
 class CharacteristicForm extends Model
 {
+    /**
+     * @var string
+     */
     public $name;
+    /**
+     * @var string
+     */
     public $type;
+    /**
+     * @var string
+     */
     public $required;
+    /**
+     * @var string
+     */
     public $default;
+    /**
+     * @var string
+     */
     public $textVariants;
+    /**
+     * @var bool|int|mixed|string|null
+     */
     public $sort;
 
+    /**
+     * @var Characteristic
+     */
     private $_characteristic;
 
+    /**
+     * CharacteristicForm constructor.
+     * @param Characteristic|null $characteristic
+     * @param array $config
+     */
     public function __construct(Characteristic $characteristic = null, $config = [])
     {
         if ($characteristic) {
+            // it is better decision? but if we will change some its field we will get problem
+            //$this->setAttributes($characteristic->getAttributes());
             $this->name = $characteristic->name;
             $this->type = $characteristic->type;
             $this->required = $characteristic->required;
@@ -36,6 +63,9 @@ class CharacteristicForm extends Model
         parent::__construct($config);
     }
 
+    /**
+     * @return array[]
+     */
     public function rules(): array
     {
         return [
@@ -48,13 +78,20 @@ class CharacteristicForm extends Model
         ];
     }
 
+    /**
+     * @return array
+     */
     public function typesList(): array
     {
         return CharacteristicHelper::typeList();
     }
 
+    /**
+     * @return array
+     */
     public function getVariants(): array
     {
-        return preg_split('#\s+#i', $this->textVariants);
+        // TODO check return preg_split('#\s+#i', $this->textVariants);
+        return preg_split('#[\r\n]+#i', $this->textVariants);
     }
 }
