@@ -7,10 +7,7 @@ use yii\db\Migration;
  */
 class m200613_062832_create_shop_categories_table extends Migration
 {
-    /**
-     * @return bool|void|null
-     */
-    public function up()
+    public function up(): void
     {
         $tableOptions = 'CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE=InnoDB';
 
@@ -41,10 +38,7 @@ class m200613_062832_create_shop_categories_table extends Migration
         ]);
     }
 
-    /**
-     * @return bool|void|null
-     */
-    public function down()
+    public function down(): void
     {
         $this->dropTable('{{%shop_categories}}');
     }

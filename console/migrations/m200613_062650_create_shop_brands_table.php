@@ -7,10 +7,7 @@ use yii\db\Migration;
  */
 class m200613_062650_create_shop_brands_table extends Migration
 {
-    /**
-     * @return bool|void|null
-     */
-    public function up()
+    public function up(): void
     {
         $tableOptions = 'CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE=InnoDB';
 
@@ -24,10 +21,7 @@ class m200613_062650_create_shop_brands_table extends Migration
         $this->createIndex('{{%idx-shop_brands-slug}}', '{{%shop_brands}}', 'slug', true);
     }
 
-    /**
-     * @return bool|void|null
-     */
-    public function down()
+    public function down(): void
     {
         $this->dropTable('{{%shop_brands}}');
     }

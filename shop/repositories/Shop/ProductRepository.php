@@ -8,7 +8,7 @@ use shop\repositories\events\EntityPersisted;
 use shop\repositories\events\EntityRemoved;
 use shop\repositories\NotFoundException;
 
-class ProductRepository
+class  ProductRepository
 {
     private $dispatcher;
 

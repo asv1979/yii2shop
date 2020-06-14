@@ -17,14 +17,37 @@ use yii\helpers\ArrayHelper;
  */
 class ProductEditForm extends CompositeForm
 {
+    /**
+     * @var int
+     */
     public $brandId;
+    /**
+     * @var string
+     */
     public $code;
+    /**
+     * @var string
+     */
     public $name;
+    /**
+     * @var string
+     */
     public $description;
+    /**
+     * @var int
+     */
     public $weight;
 
+    /**
+     * @var Product
+     */
     private $_product;
 
+    /**
+     * ProductEditForm constructor.
+     * @param Product $product
+     * @param array $config
+     */
     public function __construct(Product $product, $config = [])
     {
         $this->brandId = $product->brand_id;
@@ -42,6 +65,9 @@ class ProductEditForm extends CompositeForm
         parent::__construct($config);
     }
 
+    /**
+     * @return array
+     */
     public function rules(): array
     {
         return [
@@ -54,11 +80,17 @@ class ProductEditForm extends CompositeForm
         ];
     }
 
+    /**
+     * @return array
+     */
     public function brandsList(): array
     {
         return ArrayHelper::map(Brand::find()->orderBy('name')->asArray()->all(), 'id', 'name');
     }
 
+    /**
+     * @return string[]
+     */
     protected function internalForms(): array
     {
         return ['meta', 'categories', 'tags', 'values'];

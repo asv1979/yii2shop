@@ -7,11 +7,26 @@ use shop\entities\Shop\Product\Product;
 use yii\base\Model;
 use yii\helpers\ArrayHelper;
 
+/**
+ * Class CategoriesForm
+ * @package shop\forms\manage\Shop\Product
+ */
 class CategoriesForm extends Model
 {
+    /**
+     * @var
+     */
     public $main;
+    /**
+     * @var array
+     */
     public $others = [];
 
+    /**
+     * CategoriesForm constructor.
+     * @param Product|null $product
+     * @param array $config
+     */
     public function __construct(Product $product = null, $config = [])
     {
         if ($product) {
@@ -21,6 +36,9 @@ class CategoriesForm extends Model
         parent::__construct($config);
     }
 
+    /**
+     * @return array
+     */
     public function categoriesList(): array
     {
         return ArrayHelper::map(Category::find()->andWhere(['>', 'depth', 0])->orderBy('lft')->asArray()->all(), 'id', function (array $category) {
@@ -28,6 +46,9 @@ class CategoriesForm extends Model
         });
     }
 
+    /**
+     * @return array
+     */
     public function rules(): array
     {
         return [
@@ -37,6 +58,9 @@ class CategoriesForm extends Model
         ];
     }
 
+    /**
+     * @return bool
+     */
     public function beforeValidate(): bool
     {
         $this->others = array_filter((array)$this->others);

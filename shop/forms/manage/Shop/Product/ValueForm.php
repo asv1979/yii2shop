@@ -11,10 +11,22 @@ use yii\base\Model;
  */
 class ValueForm extends Model
 {
+    /**
+     * @var
+     */
     public $value;
 
+    /**
+     * @var Characteristic
+     */
     private $_characteristic;
 
+    /**
+     * ValueForm constructor.
+     * @param Characteristic $characteristic
+     * @param Value|null $value
+     * @param array $config
+     */
     public function __construct(Characteristic $characteristic, Value $value = null, $config = [])
     {
         if ($value) {
@@ -24,6 +36,9 @@ class ValueForm extends Model
         parent::__construct($config);
     }
 
+    /**
+     * @return array
+     */
     public function rules(): array
     {
         return array_filter([
@@ -35,6 +50,9 @@ class ValueForm extends Model
         ]);
     }
 
+    /**
+     * @return array
+     */
     public function attributeLabels(): array
     {
         return [
@@ -42,11 +60,17 @@ class ValueForm extends Model
         ];
     }
 
+    /**
+     * @return array
+     */
     public function variantsList(): array
     {
         return $this->_characteristic->variants ? array_combine($this->_characteristic->variants, $this->_characteristic->variants) : [];
     }
 
+    /**
+     * @return int
+     */
     public function getId(): int
     {
         return $this->_characteristic->id;

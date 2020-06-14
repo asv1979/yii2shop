@@ -7,10 +7,7 @@ use yii\db\Migration;
  */
 class m200425_083936_create_user_networks_table extends Migration
 {
-    /**
-     * @return bool|void|null
-     */
-    public function up()
+    public function up(): void
     {
         $tableOptions = 'CHARACTER SET utf8 COLLATE utf8_general_ci ENGINE=InnoDB';
 
@@ -28,10 +25,7 @@ class m200425_083936_create_user_networks_table extends Migration
         $this->addForeignKey('{{%fk-user_networks-user_id}}', '{{%user_networks}}', 'user_id', '{{%users}}', 'id', 'CASCADE');
     }
 
-    /**
-     * @return bool|void|null
-     */
-    public function down()
+    public function down(): void
     {
         $this->dropTable('{{%user_networks}}');
     }

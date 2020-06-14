@@ -7,12 +7,12 @@ use yii\db\Migration;
  */
 class m200421_101356_add_user_email_confirm_token_to_user extends Migration
 {
-    public function up()
+    public function up(): void
     {
         $this->addColumn('{{%user}}', 'email_confirm_token', $this->string()->unique()->after('email'));
     }
 
-    public function down()
+    public function down(): void
     {
         $this->dropColumn('{{%user}}', 'email_confirm_token');
     }

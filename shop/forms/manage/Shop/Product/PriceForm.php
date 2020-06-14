@@ -1,5 +1,4 @@
 <?php
-
 namespace shop\forms\manage\Shop\Product;
 
 use shop\entities\Shop\Product\Product;
@@ -14,9 +13,20 @@ use yii\base\Model;
  */
 class PriceForm extends Model
 {
+    /**
+     * @var
+     */
     public $old;
+    /**
+     * @var
+     */
     public $new;
 
+    /**
+     * PriceForm constructor.
+     * @param Product|null $product
+     * @param array $config
+     */
     public function __construct(Product $product = null, $config = [])
     {
         if ($product) {
@@ -26,6 +36,9 @@ class PriceForm extends Model
         parent::__construct($config);
     }
 
+    /**
+     * @return array[]
+     */
     public function rules(): array
     {
         return [

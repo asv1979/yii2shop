@@ -5,6 +5,10 @@ namespace shop\forms\manage\Shop\Product;
 use yii\base\Model;
 use yii\web\UploadedFile;
 
+/**
+ * Class PhotosForm
+ * @package shop\forms\manage\Shop\Product
+ */
 class PhotosForm extends Model
 {
     /**
@@ -12,6 +16,9 @@ class PhotosForm extends Model
      */
     public $files;
 
+    /**
+     * @return array[]
+     */
     public function rules(): array
     {
         return [
@@ -19,6 +26,9 @@ class PhotosForm extends Model
         ];
     }
 
+    /**
+     * @return bool
+     */
     public function beforeValidate(): bool
     {
         if (parent::beforeValidate()) {

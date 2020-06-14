@@ -12,9 +12,20 @@ use yii\helpers\ArrayHelper;
  */
 class TagsForm extends Model
 {
+    /**
+     * @var array
+     */
     public $existing = [];
+    /**
+     * @var
+     */
     public $textNew;
 
+    /**
+     * TagsForm constructor.
+     * @param Product|null $product
+     * @param array $config
+     */
     public function __construct(Product $product = null, $config = [])
     {
         if ($product) {
@@ -23,6 +34,9 @@ class TagsForm extends Model
         parent::__construct($config);
     }
 
+    /**
+     * @return array
+     */
     public function rules(): array
     {
         return [
@@ -31,16 +45,25 @@ class TagsForm extends Model
         ];
     }
 
+    /**
+     * @return array
+     */
     public function tagsList(): array
     {
         return ArrayHelper::map(Tag::find()->orderBy('name')->asArray()->all(), 'id', 'name');
     }
 
+    /**
+     * @return array
+     */
     public function getNewNames(): array
     {
         return array_map('trim', preg_split('#\s*,\s*#i', $this->textNew));
     }
 
+    /**
+     * @return bool
+     */
     public function beforeValidate(): bool
     {
         $this->existing = array_filter((array)$this->existing);

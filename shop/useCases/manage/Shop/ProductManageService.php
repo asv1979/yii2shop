@@ -18,14 +18,41 @@ use shop\repositories\Shop\ProductRepository;
 use shop\repositories\Shop\TagRepository;
 use shop\services\TransactionManager;
 
+/**
+ * Class ProductManageService
+ * @package shop\useCases\manage\Shop
+ */
 class ProductManageService
 {
+    /**
+     * @var ProductRepository
+     */
     private $products;
+    /**
+     * @var BrandRepository
+     */
     private $brands;
+    /**
+     * @var CategoryRepository
+     */
     private $categories;
+    /**
+     * @var TagRepository
+     */
     private $tags;
+    /**
+     * @var TransactionManager
+     */
     private $transaction;
 
+    /**
+     * ProductManageService constructor.
+     * @param ProductRepository $products
+     * @param BrandRepository $brands
+     * @param CategoryRepository $categories
+     * @param TagRepository $tags
+     * @param TransactionManager $transaction
+     */
     public function __construct(
         ProductRepository $products,
         BrandRepository $brands,
@@ -41,6 +68,10 @@ class ProductManageService
         $this->transaction = $transaction;
     }
 
+    /**
+     * @param ProductCreateForm $form
+     * @return Product
+     */
     public function create(ProductCreateForm $form): Product
     {
         $brand = $this->brands->get($form->brandId);
@@ -95,6 +126,10 @@ class ProductManageService
         return $product;
     }
 
+    /**
+     * @param $id
+     * @param ProductEditForm $form
+     */
     public function edit($id, ProductEditForm $form): void
     {
         $product = $this->products->get($id);
@@ -146,6 +181,10 @@ class ProductManageService
         });
     }
 
+    /**
+     * @param $id
+     * @param PriceForm $form
+     */
     public function changePrice($id, PriceForm $form): void
     {
         $product = $this->products->get($id);
@@ -153,6 +192,10 @@ class ProductManageService
         $this->products->save($product);
     }
 
+    /**
+     * @param $id
+     * @param QuantityForm $form
+     */
     public function changeQuantity($id, QuantityForm $form): void
     {
         $product = $this->products->get($id);
@@ -160,6 +203,9 @@ class ProductManageService
         $this->products->save($product);
     }
 
+    /**
+     * @param $id
+     */
     public function activate($id): void
     {
         $product = $this->products->get($id);
@@ -167,6 +213,9 @@ class ProductManageService
         $this->products->save($product);
     }
 
+    /**
+     * @param $id
+     */
     public function draft($id): void
     {
         $product = $this->products->get($id);
@@ -174,6 +223,10 @@ class ProductManageService
         $this->products->save($product);
     }
 
+    /**
+     * @param $id
+     * @param PhotosForm $form
+     */
     public function addPhotos($id, PhotosForm $form): void
     {
         $product = $this->products->get($id);
@@ -183,6 +236,10 @@ class ProductManageService
         $this->products->save($product);
     }
 
+    /**
+     * @param $id
+     * @param $photoId
+     */
     public function movePhotoUp($id, $photoId): void
     {
         $product = $this->products->get($id);
@@ -190,6 +247,10 @@ class ProductManageService
         $this->products->save($product);
     }
 
+    /**
+     * @param $id
+     * @param $photoId
+     */
     public function movePhotoDown($id, $photoId): void
     {
         $product = $this->products->get($id);
@@ -197,6 +258,10 @@ class ProductManageService
         $this->products->save($product);
     }
 
+    /**
+     * @param $id
+     * @param $photoId
+     */
     public function removePhoto($id, $photoId): void
     {
         $product = $this->products->get($id);
@@ -204,6 +269,10 @@ class ProductManageService
         $this->products->save($product);
     }
 
+    /**
+     * @param $id
+     * @param $otherId
+     */
     public function addRelatedProduct($id, $otherId): void
     {
         $product = $this->products->get($id);
@@ -212,6 +281,10 @@ class ProductManageService
         $this->products->save($product);
     }
 
+    /**
+     * @param $id
+     * @param $otherId
+     */
     public function removeRelatedProduct($id, $otherId): void
     {
         $product = $this->products->get($id);
@@ -220,6 +293,10 @@ class ProductManageService
         $this->products->save($product);
     }
 
+    /**
+     * @param $id
+     * @param ModificationForm $form
+     */
     public function addModification($id, ModificationForm $form): void
     {
         $product = $this->products->get($id);
@@ -232,6 +309,11 @@ class ProductManageService
         $this->products->save($product);
     }
 
+    /**
+     * @param $id
+     * @param $modificationId
+     * @param ModificationForm $form
+     */
     public function editModification($id, $modificationId, ModificationForm $form): void
     {
         $product = $this->products->get($id);
@@ -245,6 +327,10 @@ class ProductManageService
         $this->products->save($product);
     }
 
+    /**
+     * @param $id
+     * @param $modificationId
+     */
     public function removeModification($id, $modificationId): void
     {
         $product = $this->products->get($id);
@@ -252,6 +338,9 @@ class ProductManageService
         $this->products->save($product);
     }
 
+    /**
+     * @param $id
+     */
     public function remove($id): void
     {
         $product = $this->products->get($id);

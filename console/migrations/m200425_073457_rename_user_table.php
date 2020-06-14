@@ -7,18 +7,12 @@ use yii\db\Migration;
  */
 class m200425_073457_rename_user_table extends Migration
 {
-    /**
-     * @return bool|void|null
-     */
-    public function up()
+    public function up(): void
     {
         $this->renameTable('{{%user}}', '{{%users}}');
     }
 
-    /**
-     * @return bool|void|null
-     */
-    public function down()
+    public function down(): void
     {
         $this->renameTable('{{%users}}', '{{%user}}');
     }
