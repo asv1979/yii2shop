@@ -2,7 +2,7 @@
 
 namespace shop\entities\Shop\Product;
 
-use shop\entities\EventTrait;
+//use shop\entities\EventTrait;
 use lhs\Yii2SaveRelationsBehavior\SaveRelationsBehavior;
 use shop\entities\AggregateRoot;
 use shop\entities\behaviors\MetaBehavior;
@@ -48,9 +48,10 @@ use yii\web\UploadedFile;
  * @property Photo $mainPhoto
  * @property Review[] $reviews
  */
-class Product extends ActiveRecord implements AggregateRoot
+//class Product extends ActiveRecord implements AggregateRoot
+class Product extends ActiveRecord
 {
-    use EventTrait;
+    //use EventTrait;
 
     /**
      *

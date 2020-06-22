@@ -24,7 +24,13 @@
         "yiisoft/yii2-authclient": "^2.1",
         "kartik-v/yii2-widgets": "*",
         "kartik-v/yii2-field-range": "*",
-        "paulzi/yii2-nested-sets" : "^1.0"
+        "paulzi/yii2-nested-sets" : "^1.0",
+        "mihaildev/yii2-ckeditor": "^1.0",
+        "mihaildev/yii2-elfinder": "^1.2",
+        "symfony/dotenv": "^3.3",
+        "yii-dream-team/yii2-upload-behavior": "*",
+        "vlucas/phpdotenv": "^2.0",
+        "trntv/yii2-command-bus": "^3.0"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.1.0",

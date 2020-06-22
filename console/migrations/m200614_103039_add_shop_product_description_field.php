@@ -9,12 +9,11 @@ class m200614_103039_add_shop_product_description_field extends Migration
 {
     public function up(): void
     {
-        $this->addColumn('{{%shop_products}}', 'status', $this->smallInteger()->notNull());
-        $this->update('{{%shop_products}}', ['status' => 1]);
+        $this->addColumn('{{%shop_products}}', 'description', $this->text()->after('name'));
     }
 
     public function down(): void
     {
-        $this->dropColumn('{{%shop_products}}', 'status');
+        $this->dropColumn('{{%shop_products}}', 'description');
     }
 }

@@ -2,6 +2,10 @@
 
 /** @var array $params */
 
+if(!isset($params)){
+    $params = require __DIR__ . '/../../common/config/params-local.php';
+}
+
 return [
     'class' => 'yii\web\UrlManager',
     'hostInfo' => $params['frontendHostInfo'],

@@ -14,6 +14,12 @@ use yii\db\ActiveRecord;
  */
 class Review extends ActiveRecord
 {
+    /**
+     * @param $userId
+     * @param int $vote
+     * @param string $text
+     * @return static
+     */
     public static function create($userId, int $vote, string $text): self
     {
         $review = new static();
@@ -25,6 +31,10 @@ class Review extends ActiveRecord
         return $review;
     }
 
+    /**
+     * @param $vote
+     * @param $text
+     */
     public function edit($vote, $text): void
     {
         $this->vote = $vote;
@@ -41,21 +51,34 @@ class Review extends ActiveRecord
         $this->active = true;
     }
 
+    /**
+     * @return bool
+     */
     public function isActive(): bool
     {
         return $this->active === true;
     }
 
+    /**
+     * @return bool
+     */
     public function getRating(): bool
     {
         return $this->vote;
     }
 
+    /**
+     * @param $id
+     * @return bool
+     */
     public function isIdEqualTo($id): bool
     {
         return $this->id == $id;
     }
 
+    /**
+     * @return string
+     */
     public static function tableName(): string
     {
         return '{{%shop_reviews}}';

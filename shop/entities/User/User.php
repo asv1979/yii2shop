@@ -2,6 +2,8 @@
 namespace shop\entities\User;
 
 use lhs\Yii2SaveRelationsBehavior\SaveRelationsBehavior;
+use shop\entities\User\events\UserSignUpConfirmed;
+use shop\entities\User\events\UserSignUpRequested;
 use Yii;
 use yii\base\NotSupportedException;
 use yii\behaviors\TimestampBehavior;
@@ -41,85 +43,24 @@ class User extends ActiveRecord implements IdentityInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function behaviors()
     {
         return [
-            TimestampBehavior::class,
-            [
-                'class' => SaveRelationsBehavior::class,
-                'relations' => ['networks'],
-            ],
+            TimestampBehavior::class
         ];
     }
 
     /**
-     * @return array['label' => 'Users', 'icon' => 'user', 'url' => ['/user/index'], 'active' => $this->context->id == 'user/index'],     */
-    public function transactions()
+     * {@inheritdoc}
+     */
+    public function rules()
     {
         return [
-            self::SCENARIO_DEFAULT => self::OP_ALL,
+            ['status', 'default', 'value' => self::STATUS_INACTIVE],
+            ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_INACTIVE, self::STATUS_DELETED]],
         ];
-    }
-
-    /**
-     * @param string $username
-     * @param string $email
-     * @param string $password
-     * @return static
-     * @throws \yii\base\Exception
-     */
-    public static function create(string $username, string $email, string $password): self
-    {
-        $user = new User();
-        $user->username = $username;
-        $user->email = $email;
-        $user->setPassword(!empty($password) ? $password : Yii::$app->security->generateRandomString());
-        $user->created_at = time();
-        $user->status = self::STATUS_ACTIVE;
-        $user->auth_key = Yii::$app->security->generateRandomString();
-        return $user;
-    }
-
-    /**
-     * @param string $username
-     * @param string $email
-     */
-    public function edit(string $username, string $email): void
-    {
-        $this->username = $username;
-        $this->email = $email;
-        $this->updated_at = time();
-    }
-
-    /**
-     * @param string $email
-     */
-    public function editProfile(string $email): void
-    {
-        $this->email = $email;
-        $this->updated_at = time();
-    }
-
-
-    /**
-     * @param string $username
-     * @param string $email
-     * @param string $password
-     * @return static
-     * @throws \yii\base\Exception
-     */
-    public static function requestSignup(string $username, string $email, string $password): self
-    {
-        $user = new static;
-        $user->username = $username;
-        $user->email = $email;
-        $user->setPassword(!empty($password) ? $password : Yii::$app->security->generateRandomString());
-        $user->created_at = time();
-        $user->status = self::STATUS_ACTIVE;
-        $user->auth_key = Yii::$app->security->generateRandomString();
-        return $user;
     }
 
     /**
@@ -136,6 +77,17 @@ class User extends ActiveRecord implements IdentityInterface
     public static function findIdentityByAccessToken($token, $type = null)
     {
         throw new NotSupportedException('"findIdentityByAccessToken" is not implemented.');
+    }
+
+    /**
+     * Finds user by username
+     *
+     * @param string $username
+     * @return static|null
+     */
+    public static function findByUsername($username)
+    {
+        return static::findOne(['username' => $username, 'status' => self::STATUS_ACTIVE]);
     }
 
     /**
@@ -162,8 +114,7 @@ class User extends ActiveRecord implements IdentityInterface
      * @param string $token verify email token
      * @return static|null
      */
-    public static function findByVerificationToken($token)
-    {
+    public static function findByVerificationToken($token) {
         return static::findOne([
             'verification_token' => $token,
             'status' => self::STATUS_INACTIVE
@@ -182,7 +133,7 @@ class User extends ActiveRecord implements IdentityInterface
             return false;
         }
 
-        $timestamp = (int)substr($token, strrpos($token, '_') + 1);
+        $timestamp = (int) substr($token, strrpos($token, '_') + 1);
         $expire = Yii::$app->params['user.passwordResetTokenExpire'];
         return $timestamp + $expire >= time();
     }
@@ -273,42 +224,6 @@ class User extends ActiveRecord implements IdentityInterface
     }
 
     /**
-     * @throws \yii\base\Exception
-     */
-    public function requestPasswordReset()
-    {
-        if (!empty($this->password_reset_token) && self::isPasswordResetTokenValid($this->password_reset_token)) {
-            throw new \DomainException('Password resetting is already requested.');
-        }
-        $this->password_reset_token = Yii::$app->security->generateRandomString() . '_' . time();
-    }
-
-    /**
-     * @param $password
-     */
-    public function resetPassword($password): void
-    {
-        if (empty($this->password_reset_token)) {
-            throw new \DomainException('Password resetting is not requested.');
-        }
-        $this->setPassword($password);
-        $this->password_reset_token = null;
-    }
-
-    /**
-     *
-     */
-    public function confirmSignup(): void
-    {
-        if (!$this->isWait()) {
-            throw new \DomainException('User is already active.');
-        }
-        $this->status = self::STATUS_ACTIVE;
-        $this->email_confirm_token = null;
-        //$this->recordEvent(new UserSignUpConfirmed($this));
-    }
-
-    /**
      * @return bool
      */
     public function isWait(): bool
@@ -316,42 +231,29 @@ class User extends ActiveRecord implements IdentityInterface
         return $this->status === self::STATUS_WAIT;
     }
 
-    /**
-     * @return ActiveQuery
-     */
-    public function getNetworks(): ActiveQuery
-    {
-        return $this->hasMany(Network::class, ['user_id' => 'id']);
-    }
 
-    /**
-     * @param $network
-     * @param $identity
-     */
-    public function attachNetwork($network, $identity): void
-    {
-        $networks = $this->networks;
-        foreach ($networks as $current) {
-            if ($current->isFor($network, $identity)) {
-                throw new \DomainException('Network is already attached.');
-            }
-        }
-        $networks[] = Network::create($network, $identity);
-        $this->networks = $networks;
-    }
-
-    /**
-     * @param $network
-     * @param $identity
-     * @return static
-     */
-    public static function signupByNetwork($network, $identity): self
+    public static function requestSignup(string $username, string $email, string $password): self
     {
         $user = new User();
+        $user->username = $username;
+        $user->email = $email;
+        $user->setPassword($password);
         $user->created_at = time();
         $user->status = self::STATUS_ACTIVE;
+        $user->email_confirm_token = Yii::$app->security->generateRandomString();
         $user->generateAuthKey();
-        $user->networks = [Network::create($network, $identity)];
+//        $user->recordEvent(new UserSignUpRequested($user));
         return $user;
     }
+
+    public function confirmSignup(): void
+    {
+        if (!$this->isWait()) {
+            throw new \DomainException('User is already active.');
+        }
+        $this->status = self::STATUS_ACTIVE;
+        $this->email_confirm_token = null;
+//        $this->recordEvent(new UserSignUpConfirmed($this));
+    }
+
 }

@@ -68,6 +68,12 @@ class UserRepository
     public function save($user): void
     {
         if (!$user->save()) {
+            echo "<pre>";
+            var_dump($user->errors);
+            echo "</pre>";
+            exit;
+
+
             throw new \RuntimeException('Saving error.');
         }
     }

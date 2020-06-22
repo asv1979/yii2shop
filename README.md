@@ -1,6 +1,6 @@
 # Study yii2 project
 
-####`http://shop.test:8080`
+####`http://shop.test.local:8080`
 
 Старт:
 

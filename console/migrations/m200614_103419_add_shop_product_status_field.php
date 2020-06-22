@@ -7,36 +7,14 @@ use yii\db\Migration;
  */
 class m200614_103419_add_shop_product_status_field extends Migration
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function safeUp()
+    public function up(): void
     {
-
+        $this->addColumn('{{%shop_products}}', 'status', $this->smallInteger()->notNull());
+        $this->update('{{%shop_products}}', ['status' => 1]);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function safeDown()
+    public function down(): void
     {
-        echo "m200614_103419_add_shop_product_status_field cannot be reverted.\n";
-
-        return false;
+        $this->dropColumn('{{%shop_products}}', 'status');
     }
-
-    /*
-    // Use up()/down() to run migration code without a transaction.
-    public function up()
-    {
-
-    }
-
-    public function down()
-    {
-        echo "m200614_103419_add_shop_product_status_field cannot be reverted.\n";
-
-        return false;
-    }
-    */
 }

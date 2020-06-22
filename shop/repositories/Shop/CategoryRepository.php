@@ -23,10 +23,10 @@ class CategoryRepository
      * CategoryRepository constructor.
      * @param EventDispatcher $dispatcher
      */
-    public function __construct(EventDispatcher $dispatcher)
-    {
-        $this->dispatcher = $dispatcher;
-    }
+//    public function __construct(EventDispatcher $dispatcher)
+//    {
+//        $this->dispatcher = $dispatcher;
+//    }
 
     /**
      * @param $id
@@ -48,7 +48,7 @@ class CategoryRepository
         if (!$category->save()) {
             throw new \RuntimeException('Saving error.');
         }
-        $this->dispatcher->dispatch(new EntityPersisted($category));
+        //$this->dispatcher->dispatch(new EntityPersisted($category));
     }
 
     /**
@@ -61,6 +61,6 @@ class CategoryRepository
         if (!$category->delete()) {
             throw new \RuntimeException('Removing error.');
         }
-        $this->dispatcher->dispatch(new EntityRemoved($category));
+        //$this->dispatcher->dispatch(new EntityRemoved($category));
     }
 }
