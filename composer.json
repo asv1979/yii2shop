@@ -30,7 +30,11 @@
         "symfony/dotenv": "^3.3",
         "yii-dream-team/yii2-upload-behavior": "*",
         "vlucas/phpdotenv": "^2.0",
-        "trntv/yii2-command-bus": "^3.0"
+        "trntv/yii2-command-bus": "^3.0",
+        "bower-asset/font-awesome": "^4.7",
+        "bower-asset/owl.carousel": "^2.2",
+        "bower-asset/magnific-popup": "^1.1",
+        "elasticsearch/elasticsearch": ">6.7"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.1.0",

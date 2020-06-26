@@ -45,6 +45,12 @@ class SearchForm extends CompositeForm
         return ArrayHelper::map(Brand::find()->orderBy('name')->asArray()->all(), 'id', 'name');
     }
 
+
+    /**
+     * TODO We rewrite form name for search in backend?
+     *
+     * @return string
+     */
     public function formName(): string
     {
         return '';
