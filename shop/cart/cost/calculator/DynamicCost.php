@@ -6,15 +6,30 @@ use shop\cart\cost\Cost;
 use shop\cart\cost\Discount as CartDiscount;
 use shop\entities\Shop\Discount as DiscountEntity;
 
+/**
+ * Class DynamicCost
+ * @package shop\cart\cost\calculator
+ */
 class DynamicCost implements CalculatorInterface
 {
+    /**
+     * @var CalculatorInterface
+     */
     private $next;
 
+    /**
+     * DynamicCost constructor.
+     * @param CalculatorInterface $next
+     */
     public function __construct(CalculatorInterface $next)
     {
         $this->next = $next;
     }
 
+    /**
+     * @param array $items
+     * @return Cost
+     */
     public function getCost(array $items): Cost
     {
         /** @var DiscountEntity[] $discounts */

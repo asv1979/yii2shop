@@ -41,6 +41,7 @@ class Cart
         $this->loadItems();
         foreach ($this->items as $i => $current) {
             if ($current->getId() == $item->getId()) {
+                // without change this object we create new object without change current in the plus action
                 $this->items[$i] = $current->plus($item->getQuantity());
                 $this->saveItems();
                 return;

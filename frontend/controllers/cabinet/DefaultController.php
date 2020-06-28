@@ -5,8 +5,15 @@ namespace frontend\controllers\cabinet;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 
+/**
+ * Class DefaultController
+ * @package frontend\controllers\cabinet
+ */
 class DefaultController extends Controller
 {
+    /**
+     * @var string
+     */
     public $layout = 'cabinet';
 
     public function behaviors(): array

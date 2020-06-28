@@ -9,12 +9,33 @@ use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\web\Controller;
 
+/**
+ * Class WishlistController
+ * @package frontend\controllers\cabinet
+ */
 class WishlistController extends Controller
 {
+    /**
+     * @var string
+     */
     public $layout = 'cabinet';
+    /**
+     * @var WishlistService
+     */
     private $service;
+    /**
+     * @var ProductReadRepository
+     */
     private $products;
 
+    /**
+     * WishlistController constructor.
+     * @param $id
+     * @param $module
+     * @param WishlistService $service
+     * @param ProductReadRepository $products
+     * @param array $config
+     */
     public function __construct($id, $module, WishlistService $service, ProductReadRepository $products, $config = [])
     {
         parent::__construct($id, $module, $config);
@@ -26,7 +47,7 @@ class WishlistController extends Controller
     {
         return [
             'access' => [
-                'class' => AccessControl::className(),
+                'class' => AccessControl::class,
                 'rules' => [
                     [
                         'allow' => true,
@@ -35,7 +56,7 @@ class WishlistController extends Controller
                 ],
             ],
             'verbs' => [
-                'class' => VerbFilter::className(),
+                'class' => VerbFilter::class,
                 'actions' => [
                     'add' => ['POST'],
                     'delete' => ['POST'],

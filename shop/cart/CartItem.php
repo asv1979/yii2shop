@@ -5,12 +5,31 @@ namespace shop\cart;
 use shop\entities\Shop\Product\Modification;
 use shop\entities\Shop\Product\Product;
 
+/**
+ * Class CartItem
+ * @package shop\cart
+ */
 class CartItem
 {
+    /**
+     * @var Product
+     */
     private $product;
+    /**
+     * @var int
+     */
     private $modificationId;
+    /**
+     * @var int
+     */
     private $quantity;
 
+    /**
+     * CartItem constructor.
+     * @param Product $product
+     * @param $modificationId
+     * @param $quantity
+     */
     public function __construct(Product $product, $modificationId, $quantity)
     {
         if (!$product->canBeCheckout($modificationId, $quantity)) {
@@ -72,11 +91,19 @@ class CartItem
         return $this->getPrice() * $this->quantity;
     }
 
+    /**
+     * @param $quantity
+     * @return $this
+     */
     public function plus($quantity)
     {
         return new static($this->product, $this->modificationId, $this->quantity + $quantity);
     }
 
+    /**
+     * @param $quantity
+     * @return $this
+     */
     public function changeQuantity($quantity)
     {
         return new static($this->product, $this->modificationId, $quantity);

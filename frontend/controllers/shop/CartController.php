@@ -10,13 +10,34 @@ use yii\filters\VerbFilter;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 
+/**
+ * Class CartController
+ * @package frontend\controllers\shop
+ */
 class CartController extends Controller
 {
+    /**
+     * @var string
+     */
     public $layout = 'blank';
 
+    /**
+     * @var ProductReadRepository
+     */
     private $products;
+    /**
+     * @var CartService
+     */
     private $service;
 
+    /**
+     * CartController constructor.
+     * @param $id
+     * @param $module
+     * @param CartService $service
+     * @param ProductReadRepository $products
+     * @param array $config
+     */
     public function __construct($id, $module, CartService $service, ProductReadRepository $products, $config = [])
     {
         parent::__construct($id, $module, $config);
@@ -28,7 +49,7 @@ class CartController extends Controller
     {
         return [
             'verbs' => [
-                'class' => VerbFilter::className(),
+                'class' => VerbFilter::class,
                 'actions' => [
                     'quantity' => ['POST'],
                     'remove' => ['POST'],

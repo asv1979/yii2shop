@@ -2,17 +2,36 @@
 
 namespace shop\cart\cost;
 
+/**
+ * Class Cost
+ * @package shop\cart\cost
+ */
 final class Cost
 {
+    /**
+     * @var float
+     */
     private $value;
+    /**
+     * @var array
+     */
     private $discounts = [];
 
+    /**
+     * Cost constructor.
+     * @param float $value
+     * @param array $discounts
+     */
     public function __construct(float $value, array $discounts = [])
     {
         $this->value = $value;
         $this->discounts = $discounts;
     }
 
+    /**
+     * @param Discount $discount
+     * @return $this
+     */
     public function withDiscount(Discount $discount): self
     {
         return new static($this->value, array_merge($this->discounts, [$discount]));

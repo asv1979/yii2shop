@@ -2,6 +2,10 @@
 
 namespace common\bootstrap;
 
+use shop\cart\Cart;
+use shop\cart\cost\calculator\DynamicCost;
+use shop\cart\cost\calculator\SimpleCost;
+use shop\cart\storage\HybridStorage;
 use shop\useCases\ContactService;
 use yii\base\BootstrapInterface;
 use yii\base\ErrorHandler;
@@ -35,6 +39,13 @@ class SetUp implements BootstrapInterface
         /** if get client from docker container  create()->setHost(...)->build() */
         $container->setSingleton(Client::class, function () {
             return ClientBuilder::create()->build();
+        });
+
+        $container->setSingleton(Cart::class, function () use ($app) {
+            return new Cart(
+                new HybridStorage($app->get('user'), 'cart', 3600 * 24, $app->db),
+                new DynamicCost(new SimpleCost())
+            );
         });
     }
 }

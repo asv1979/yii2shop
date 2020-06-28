@@ -116,7 +116,7 @@ AppAsset::register($this);
                 <?= Html::endForm() ?>
             </div>
             <div class="col-sm-3">
-                <?//= CartWidget::widget() ?>
+                <?= CartWidget::widget() ?>
             </div>
         </div>
     </div>
